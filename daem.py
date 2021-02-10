@@ -29,7 +29,7 @@ obj=(W1-b1)**2
 result1=obj.sum()
 print(result1)
 
-plt.plot(b1,b3,W1,b3)
+plt.plot(b3,b1,b3,W1)
 plt.show()
 
 
