@@ -1,31 +1,35 @@
 import numpy as np
 import math
-import decimal
-import matplotlib.pyplot as plt
+from scipy.optimize import minimize
 
-T=np.arange(273,273+1105,5)
-E=np.linspace(10,500, T.size)
-zeta1=np.zeros(T.size**2)
-zeta= zeta1.reshape(T.size,T.size)
 
-for i in range (len(T)):
-    for j in range (len(E)):
-        zeta[i,j]=-((8.31*T[i]**2)/(5*E[j]*1000))*math.exp(-((E[j]*1000)/(8.31*T[i])))
+def f(x):
+	A=x[0]
+	n=x[1]
+	mE=x[2]
+	sigma=x[3]
+	T=473
+	E = np.arange(10, 150, 1)
+	fE = np.zeros(len(E))
+	for i in range(len(E)):
+		fE[i] = ((1/math.sqrt(2*math.pi*sigma**2)) *math.exp(-((E[i]-mE)**2)/(2*sigma**2)))
 
-mE=189.15
-sigma=14.73
-k0=1.1291*10**16
-n=7.88
+	t = np.array([0, 15, 30, 45, 60, 120, 180, 240, 300, 596, 1200, 1800])
 
-zeta2=(1-n)*k0*zeta
+	zeta1 = np.zeros(t.size*E.size)
+	zeta = zeta1.reshape(t.size, E.size)
 
-fE=np.zeros(len(E))
+	for i in range(t.size):
+	  for j in range(E.size):
+	    zeta[i, j] = t[i]*math.exp((-(E[j]*1000)/(8.31*T)))
 
-for i in range (len(E)):
-    fE[i]=((1/math.sqrt(2*math.pi*sigma**2))*math.exp(-((E[i]-mE)**2)/(2*sigma**2)))
+	zeta2 = (1-(1-n)*A*(10**8)*zeta)**(1/(1-n))
+	final = zeta2@fE
 
-W1=(1 + zeta2)**(1//1-n)
-W=W1@fE
-print(fE.sum())
-plt.plot(T,W)
-plt.show()
+	W1 = np.array([1, 0.775, 0.659, 0.6, 0.577, 0.472,0.418, 0.307, 0.177, 0.139, 0.082, 0])
+	result1=(W1-final)**2
+	obj=result1.sum()
+	return obj
+
+a=minimize(f,[30,5,70,15],method="Nelder-Mead")
+print(a)
