@@ -21,12 +21,6 @@ def W(T,A,n,mE,sigma):
 	final=zeta2@fE 
 	return final,fE,t
 
-mEtrial=np.arange(10,150,0.1)
-ntrial=np.arange(1.5,10,0.1)
-sigmatrial=np.arange(10,20,0.1)
-Atrial=np.arange(1,100,0.5)
-
-
 b1,b2,b3=W(473,34.7854,1.00000575,105.65175085,6.18131)
 
 W1=np.array([1, 0.775, 0.659, 0.6, 0.577, 0.472, 0.418, 0.307, 0.177, 0.139, 0.082, 0])
