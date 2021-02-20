@@ -53,6 +53,7 @@ def objective_function(x):
 
 sp.random.seed(0)
 res, res_list_2 = multistart(objective_function,300,full_output=True)
+print(res)
 
 x=res.x
 n=x[0] 
